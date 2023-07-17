@@ -100,6 +100,7 @@ const tableBody = document.getElementById("table-body");
 const printButton = document.getElementById("print-button");
 const title = document.getElementById("title");
 const findBox = document.getElementById("find-box");
+const footerVersion = document.getElementById("version-footer");
 
 
 
@@ -172,6 +173,11 @@ const findBox = document.getElementById("find-box");
         loadFileLabel.innerText = 'Reporte "By Order Status"';
         loadingFrame.classList.add("no-visible");
         document.title = title.innerText = "Pedidos por flujos";
+        findBox.style.display = "none";
+        
+        footerVersion.innerText = "Versión " + VERSION + footerVersion.innerText;
+
+
 
         contentData = [];
         isellsMap = new Map();
@@ -311,6 +317,7 @@ const findBox = document.getElementById("find-box");
 
             startPanel.classList.add("no-visible");
             dataPanel.classList.remove("no-visible");
+            findBox.style.display = "flex";
 
             // showContent(keysOrderTypes, ordersTypes);
             showContent(totalsOrderTypes, ordersTypes);

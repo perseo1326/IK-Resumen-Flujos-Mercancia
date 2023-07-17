@@ -223,15 +223,9 @@ table tbody#table-body tr.main-type div.expand-base div.expand-cover {
 
 /* ***** TABLE STYLES ***** */
 
-div.data {
-    /* padding: 0.5em 0.2em; */
-    /* height: var(--height-data); */
-    /* background-color: aqua; */
-}
-
 table {
     width: 100%;
-    /* min-height: var(--height-total); */
+    min-height: var(--height-data);
     border-collapse : collapse;
     border: 2px solid black;
 }
@@ -282,6 +276,17 @@ table tbody#table-body tr.hide-details {
 }
 
 /* ***** TABLE STYLES END ***** */
+
+div.footer-version {
+    background-color: greenyellow;
+    padding: 0.2em 1em;
+}
+
+div.footer-version p.version {
+    text-align: right;
+    font-style: italic;
+    font-size: 0.8em;
+}
 
 
 /* ***** PRINT BUTTON STYLES ***** */
