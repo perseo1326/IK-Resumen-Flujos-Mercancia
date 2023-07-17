@@ -3,9 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    
     <title>Resumen Flujos Mercancia</title>
 </head>
-<body>
-    
+<body class="box">
+
+    <!-- Panel Wait Async -->
+    <div class="loading-frame no-visible" id="loading-frame">
+        <div class="loading" >
+            <p id="loading">Cargando...</p>
+        </div>
+    </div>
+
+    <div class="container-title">
+        <div class="title">
+            <h1 id="title">Pedidos por flujos</h1>
+        </div>
+
+        <div id="find-box" class="find-box no-visible">
+            <div class="find">
+                <p>Buscar</p>
+                <span>
+                    <svg xmlns="http://www.w3.org/2000/svg" height="2em" viewBox="0 0 512 512">
+                        <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/>
+                    </svg>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div id="start-panel" class="start-panel hide-print">
+        <div class="contenido">
+
+            <div class="margen-bajo-05">
+                <label id="load-file-label" class="block custom-button" for="load-file">Reporte "By Order Status"</label>
+                <input id="load-file" type="file" class="no-visible">
+            </div>
+            
+            <div class="margen-bajo-05">
+                <input class="block custom-button" type="date" name="" id="work-date">
+            </div>
+            
+            <div id="go-button" class="go-button" >
+                <svg width="80px" height="30px" viewBox="0 -6.5 38 38" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+
+                    <title>right-arrow</title>
+                    <desc>Created with Sketch.</desc>
+                    <g id="icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                        <g id="ui-gambling-website-lined-icnos-casinoshunter" transform="translate(-1511.000000, -158.000000)" fill="#ffdb01" fill-rule="nonzero">
+                            <g id="1" transform="translate(1350.000000, 120.000000)">
+                                <path d="M187.812138,38.5802109 L198.325224,49.0042713 L198.41312,49.0858421 C198.764883,49.4346574 198.96954,49.8946897 199,50.4382227 L198.998248,50.6209428 C198.97273,51.0514917 198.80819,51.4628128 198.48394,51.8313977 L198.36126,51.9580208 L187.812138,62.4197891 C187.031988,63.1934036 185.770571,63.1934036 184.990421,62.4197891 C184.205605,61.6415481 184.205605,60.3762573 184.990358,59.5980789 L192.274264,52.3739093 L162.99947,52.3746291 C161.897068,52.3746291 161,51.4850764 161,50.3835318 C161,49.2819872 161.897068,48.3924345 162.999445,48.3924345 L192.039203,48.3917152 L184.990421,41.4019837 C184.205605,40.6237427 184.205605,39.3584519 184.990421,38.5802109 C185.770571,37.8065964 187.031988,37.8065964 187.812138,38.5802109 Z" id="right-arrow">
+                
+                </path>
+                            </g>
+                        </g>
+                    </g>
+                </svg>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="data-panel" class="data no-visible">
+        <table>
+            <thead>
+                <tr class="centrar">
+                    <th>Tipo de Flujo</th>
+                    <th class="">COTs</th>
+                    <th>Isells</th>
+                    <th>Market</th>
+                    <th>Autoservicio</th>
+                    <th>Full</th>
+                    <th>Total por flujo</th>
+                </tr>
+            </thead>
+            <tbody id="table-body">
+
+            </tbody>
+        </table>
+
+        
+        <div class="print-box hide-print">
+            <button id="print-button" class="custom-button">Imprimir Información</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="./excelReportsFunctions.js"></script>
+    <script src="./app.js"></script>
 </body>
 </html>
+
+
+
+
+
+<!-- 
+
+    
+    <div class="title">
+        <h1>Resúmen de pedidos por flujos de Mercancía</h1>
+    </div>
+    
+    <div class="contenido">
+        div 2
+    </div>
+
+-->
+
+

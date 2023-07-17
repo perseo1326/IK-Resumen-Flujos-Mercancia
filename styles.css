@@ -1,0 +1,332 @@
+
+/* ***** BASIC STYLES ***** */
+
+* {
+    --background: white;
+    --first-color: #0057a4;
+    --second-color: #ffdb01;
+    --warning-color: rgba(255, 165, 0, 1);
+    --height-title: 13%;
+    --height-data: 87%;
+    --height-total: 100%;
+    --A4-width: 21cm;
+    --A4-height: 29.7cm;
+    margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+    font-family: "Noto IKEA", "Noto Sans", "Roboto", "Open Sans", system-ui, sans-serif;
+    font-size: 16px;
+}
+
+.no-visible {
+    display: none;
+}
+
+.show-print{
+    display: none;
+}
+
+.centrar {
+    text-align: center;
+}
+
+.align-left {
+    text-align: left;
+}
+
+.block {
+    display: block;
+}
+
+.margen-bajo-05 {
+    margin-bottom: 0.5em;
+}
+
+/* ***** END BASIC STYLES ***** */
+
+html, body.box {
+    height: var(--height-total);
+}
+
+div.container-title {
+    height: var(--height-title);
+    display: flex;
+    flex-direction: column;
+}
+
+div.title {
+    padding: 0.5em;
+    width: 100%;
+}
+
+div.container-title div.find-box {
+    display: flex;
+    justify-content: flex-end;
+}
+
+div.container-title div.find-box div.find {
+    display: flex;
+    align-items: center;
+    margin-right: 2em;
+    border: 1px dotted transparent;
+}
+
+div.container-title div.find-box div.find:hover {
+    border: 1px solid var(--first-color);
+    border-radius: 3px;
+    background-color: var(--second-color);
+}
+
+div.container-title div.find-box div.find p {
+    padding: 0 0.5em;
+    color: var(--first-color);
+    font-size: 1.2em;
+}
+
+div.container-title div.find-box div.find span svg {
+    fill: var(--first-color);
+    padding: 0.2em 0.3em;
+}
+
+div.start-panel {
+	background-color: lightblue;
+	height: var(--height-data);
+}
+
+div.contenido {
+    height: var(--height-total);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+h1 {
+    text-align: center;
+    font-size: 2em;
+}
+
+/* ***** BUTTON STYLES ***** */
+
+label {
+    padding: 0.3em;
+    font-size: 1.2em;
+}
+
+.custom-button {
+    border: 1px solid var(--first-color);
+    border-radius: 4px;
+	background-color: var(--first-color);
+	color: var(--second-color);
+	cursor: pointer;
+	font-size: 1rem;
+	margin: 0.3rem auto;
+	padding: 0.3rem 0.6rem;
+	text-align: center;
+}
+
+.custom-button:hover {
+    background-color: var(--second-color);
+    color: var(--first-color);
+    border: 1px solid var(--first-color);
+}
+
+div.go-button {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    cursor: pointer;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+    div.go-button:hover {
+    background-color: var(--first-color);
+    border: 1px solid var(--first-color);
+    border-radius: 4px;
+}
+
+div.go-button svg g#ui-gambling-website-lined-icnos-casinoshunter {
+    fill: var(--first-color);
+}
+
+div.go-button:hover svg g#ui-gambling-website-lined-icnos-casinoshunter {
+    fill: #ffdb01;
+}
+
+/* ***** BUTTON STYLES END ***** */
+
+/* ***** LOADING FRAME ***** */
+
+div.loading-frame {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(5px);
+    z-index: 10;
+}
+
+div.loading-frame div.loading {
+	position: relative;
+	background-color: var(--first-color);
+    color: var(--second-color);
+    text-align: center;
+    max-width: 40%;
+    margin : auto;
+    top: 50%;
+	padding: 2rem ;
+    border-radius: 5px;
+    transform: translate(-0%, -50%);
+    -webkit-transform: translate(-0%, -50%);
+}
+
+div.loading p {
+    margin: auto;
+    font-weight: bold;
+    font-size: 1.5em;
+}
+
+/* ***** LOADING FRAME END ***** */
+
+/* ***** SVG TABLE ICON STYLES ***** */
+
+table tbody#table-body tr.main-type td svg {
+    fill: var(--first-color);
+    position: relative;
+    transform: rotate(180deg);
+    height: 2em;
+    width: auto;
+}
+
+table tbody#table-body tr.main-type td:hover svg {
+    fill: var(--background);
+    transform: rotate(270deg);
+}
+
+table tbody#table-body tr.main-type div.expand-base {
+    position: relative;
+}
+
+table tbody#table-body tr.main-type div.expand-base div.expand-cover {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+}
+
+
+/* ***** SVG TABLE ICON STYLES END ***** */
+
+
+
+/* ***** TABLE STYLES ***** */
+
+div.data {
+    /* padding: 0.5em 0.2em; */
+    /* height: var(--height-data); */
+    /* background-color: aqua; */
+}
+
+table {
+    width: 100%;
+    /* min-height: var(--height-total); */
+    border-collapse : collapse;
+    border: 2px solid black;
+}
+
+table tr th {
+    border-bottom: 2px solid black;
+    background-color: var(--first-color);
+    color: var(--second-color);
+    padding: 0.3em;
+}
+
+table tbody#table-body tr:hover {
+    background-color: var(--second-color);
+}
+
+table tbody#table-body tr {
+    border-bottom: 1px solid gray;
+}
+
+table tbody#table-body tr td {
+    padding: 0.3em;
+}
+
+table tbody#table-body tr td.isell {
+    color: var(--first-color);
+}
+
+table tbody#table-body tr.main-type {
+    background-color: var(--second-color);
+    font-weight: bold;
+}
+
+/* TODO */
+table tbody#table-body tr.main-type td.expand {
+    cursor: pointer;
+}
+
+table tbody#table-body tr.totals {
+    font-weight: bold;
+}
+
+table tbody#table-body tr.row {
+    background-color: lightgray;
+}
+
+table tbody#table-body tr.hide-details {
+    display: none;
+}
+
+/* ***** TABLE STYLES END ***** */
+
+
+/* ***** PRINT BUTTON STYLES ***** */
+
+div.print-box {
+    display: flex;
+    padding: 0.5em;
+    width: 100%;
+}
+
+/* ***** PRINT BUTTON STYLES END ***** */
+
+
+
+/* ***** PRINTABLE STYLES ***** */
+
+@media print {
+
+    *, *:after, *:before {
+        --background: transparent;
+        --first-color: black;
+        --second-color: white;
+    }
+
+    body, html {
+        background-color: transparent !important;
+        color: black !important;
+        padding: 0;
+    }
+
+    table tr th {
+        print-color-adjust: exact;
+        -webkit-print-color-adjust:exact;
+        background-color: rgb(170, 167, 167);
+        color: var(--first-color);
+    }
+
+    .hide-print {
+        display: none !important;
+    }
+
+    table tbody#table-body tr.main-type,
+    table tbody#table-body tr.totals {
+        print-color-adjust: exact;
+        -webkit-print-color-adjust:exact;
+        background-color: lightgray;
+    }
+}
