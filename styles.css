@@ -133,6 +133,7 @@ label {
 
 div.go-button {
     display: flex;
+    padding: 0 2em;
     flex-direction: column;
     justify-content: center;
     cursor: pointer;
@@ -146,12 +147,12 @@ div.go-button {
     border-radius: 4px;
 }
 
-div.go-button svg g#ui-gambling-website-lined-icnos-casinoshunter {
+div.go-button svg {
     fill: var(--first-color);
 }
 
-div.go-button:hover svg g#ui-gambling-website-lined-icnos-casinoshunter {
-    fill: #ffdb01;
+div.go-button:hover svg {
+    fill: var(--second-color)
 }
 
 /* ***** BUTTON STYLES END ***** */
@@ -278,7 +279,6 @@ table tbody#table-body tr.hide-details {
 /* ***** TABLE STYLES END ***** */
 
 div.footer-version {
-    background-color: greenyellow;
     padding: 0.2em 1em;
 }
 
@@ -315,6 +315,10 @@ div.print-box {
         background-color: transparent !important;
         color: black !important;
         padding: 0;
+    }
+
+    div.container-title {
+        height: calc( var(--height-title) / 2);
     }
 
     table tr th {
