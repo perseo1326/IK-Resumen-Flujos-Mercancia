@@ -99,7 +99,16 @@ const dataPanel = document.getElementById("data-panel");
 const tableBody = document.getElementById("table-body");
 const printButton = document.getElementById("print-button");
 const title = document.getElementById("title");
+// find panel button main page -> div container 
 const findBox = document.getElementById("find-box");
+// find button main page 
+const findButton = document.getElementById("find-button");
+
+// finding panel
+const findingFrame = document.getElementById("finding-frame");
+const findingText = document.getElementById("finding-text");
+const findCancelB = document.getElementById("find-cancel-b");
+const findIsellRefButton = document.getElementById("find-submit-b");
 const footerVersion = document.getElementById("version-footer");
 
 
@@ -129,7 +138,11 @@ const footerVersion = document.getElementById("version-footer");
     const SELF_SERVICE = "SELFSERVE";
     const WAREHOUSE = "FULLSERVE_INTERNAL";
 
+    const FIND_BY_ISELL = "ISELL";
+    const FIND_BY_REFERENCE = "REFERENCE";
+
     let contentData = [];
+    let referencesMap = new Map();
     let isellsMap = new Map();
     let ordersTypes = new Map();
 
@@ -156,8 +169,19 @@ const footerVersion = document.getElementById("version-footer");
 
     printButton.addEventListener('click', printDocument);
 
+    // show find dialog-box
+    findButton.addEventListener('click', function() {
+        findingFrame.classList.remove("no-visible");
+    });
 
+    findCancelB.addEventListener('click', () => {
+        findingText.value = "";
+        findingText.classList.remove("error");
+        document.getElementById("find-error").classList.add("no-visible");
+        findingFrame.classList.add("no-visible");
+    });
 
+    findIsellRefButton.addEventListener('click', findIsellRef );
 
 
     // *********************************************************
@@ -174,14 +198,14 @@ const footerVersion = document.getElementById("version-footer");
         loadingFrame.classList.add("no-visible");
         document.title = title.innerText = "Pedidos por flujos";
         findBox.style.display = "none";
+        findingText.value = "";
         
         footerVersion.innerText = "Versión " + VERSION + footerVersion.innerText;
-
-
 
         contentData = [];
         isellsMap = new Map();
         ordersTypes = new Map();
+        referencesMap = new Map();
         workDate.valueAsDate = new Date("2023-07-04");
     }
 
@@ -233,24 +257,42 @@ const footerVersion = document.getElementById("version-footer");
         fileReader.onload =  function(){
             try {
                 let buffer = this.result;
-                let workbook =  XLSX.read(buffer);
-                let contentFile =  XLSX.utils.sheet_to_row_object_array(workbook.Sheets[WORKING_SHEET]);
+                let workbook =  XLSX[read](buffer);
+                let contentFile =  XLSX[utils][sheet_to_row_object_array](workbook.Sheets[WORKING_SHEET]);
 
                 // process and clean info from the file
                 let arrayExcel = readReportsExcel(excelFile.file, contentFile);
                 console.log("Carga \"" + excelFile.file.name + "\" Finalizada!", arrayExcel); 
 
                 contentData = arrayExcel;
+                referencesMap = createReferencesMap(contentData);
 
             } catch (error) {
                 console.log("ERROR:", error);
                 alert(error.message);
                 initializePage();
-                return;
             }
         };
     }
-    
+
+
+    // *********************************************************
+    function createReferencesMap( dataArray ){
+
+        const refMap = new Map();
+        dataArray.forEach( value => {
+            if(!refMap.has(value[ARTICLE_NUMBER])) {
+                refMap.set(value[ARTICLE_NUMBER], {
+                        ARTICLE_NUMBER : value[ARTICLE_NUMBER], 
+                        ARTICLE_NAME : value[ARTICLE_NAME],
+                        isellsArray : []
+                    } );
+            }
+            refMap.get(value[ARTICLE_NUMBER]).isellsArray.push(value[ISELL]);
+        });
+        return refMap;
+    }
+
 
     // *********************************************************
     // *********************************************************
@@ -354,6 +396,90 @@ const footerVersion = document.getElementById("version-footer");
         }
         element.classList.toggle("hide-details");
         reverseRowVisibility(element.nextSibling, idType);
+    }
+
+
+    // *********************************************************
+    function validateIsellRef(text){
+
+        const pattern = /[^0-9]/;
+        if(text === ''){
+            console.log("WARNING:validateIsellRef: No hay nada que buscar.");
+            throw new Error("No hay nada que buscar.");
+        }
+        if(pattern.test(text)){
+            console.log("WARNING:validateIsellRef: Unicamente se permiten números.");
+            throw new Error("Unicamente se permiten números.");
+        }
+        return text;
+    }
+    
+    
+    // *********************************************************
+    function findByIsell( isellText, dataMap ){
+
+        const isellsFound = new Map();
+        dataMap.forEach( (value, key ) => {
+            if(key.includes(isellText)){
+                isellsFound.set(key, value);
+            }
+        });
+        return isellsFound;
+    }
+
+
+    // *********************************************************
+    function findByReference( referenceText, refMap ){
+        
+        const referencesFound = new Map();
+    
+        refMap.forEach( (value, key ) => {
+            if(key.includes(referenceText)){
+                referencesFound.set(key, value);
+            }
+            // console.log("valores referencias: ", typeof(key), key, value);
+        });
+        console.log("referencias encontrADAS: ", referencesFound);
+        return referencesFound;
+    }
+
+
+    // *********************************************************
+    function findIsellRef() {
+        try {
+            document.getElementById("find-error").innerText = "";
+            document.getElementById("find-error").classList.add("no-visible");
+            findingText.classList.remove("error");
+
+            
+            
+            const value = validateIsellRef(findingText.value);
+            const typeSearch = document.querySelector("input[name='find-type']:checked").value;
+            let foundItems = undefined;
+
+            switch (typeSearch) {
+                case FIND_BY_ISELL:
+                    foundItems = findByIsell(value, isellsMap);
+                    break;
+                case FIND_BY_REFERENCE:
+                    foundItems = findByReference( value, referencesMap );
+                    break;
+                default:
+                    return;
+            }
+            // console.log("Buscar: ", value, typeSearch, isellsMap);
+
+            console.log("Busqueda por '", typeSearch, "', encontrados: ", foundItems);
+            
+
+
+        } catch (error) {
+            document.getElementById("find-error").innerText = error.message;
+            document.getElementById("find-error").classList.remove("no-visible");
+            findingText.classList.add("error");
+            console.log("ERROR:", error);
+            // alert(error.message);
+        }
     }
 
 

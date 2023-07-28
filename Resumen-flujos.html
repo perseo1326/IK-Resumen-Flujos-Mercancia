@@ -17,13 +17,57 @@
         </div>
     </div>
 
+    <!-- Panel Find -->
+    <div id="finding-frame" class="loading-frame no-visible" id="finding-frame">
+        <div class="container-find">
+            <div class="finding-box" >
+                <div class="find-title">
+                    <h3>Buscar por ISELL o por Referencia</h3>
+                </div>
+                <div class="find-content">
+                    <div class="find-text">
+                        <input id="finding-text" class="" type="text" name="finding-text">
+                    </div>
+
+                    <div class="find-selection">
+                        <label class="" for="find-isell">
+                            <p>Isell</p>
+                            <input type="radio" name="find-type" id="find-isell" value="ISELL" checked>
+                            <span></span>
+                        </label>
+
+                        <div><span></span></div>
+                        <label class="" for="find-ref">
+                            <p>Referencia</p>
+                            <input type="radio" name="find-type" id="find-ref" value="REFERENCE">
+                            <span></span>
+                        </label>
+                    </div>
+                    <div id="find-error" class="no-visible find-error"></div>
+
+                    <div class="find-buttons">
+                        <input id="find-submit-b" class="custom-button" type="submit" value="Buscar">
+                        <input id="find-cancel-b" class="custom-button" type="button" value="Salir">
+                    </div>
+
+                </div>
+                
+                
+                <div id="found-items" class="found-items">
+                    items enconntrasddos!!
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="container-title">
         <div class="title">
             <h1 id="title">Pedidos por flujos</h1>
         </div>
 
+        <!-- find button -->
         <div id="find-box" class="find-box hide-print">
-            <div class="find">
+            <div id="find-button" class="find">
                 <p>Buscar</p>
                 <span>
                     <svg xmlns="http://www.w3.org/2000/svg" height="2em" viewBox="0 0 512 512">
@@ -88,22 +132,4 @@
     <script src="./app.js"></script>
 </body>
 </html>
-
-
-
-
-
-<!-- 
-
-    
-    <div class="title">
-        <h1>Resúmen de pedidos por flujos de Mercancía</h1>
-    </div>
-    
-    <div class="contenido">
-        div 2
-    </div>
-
--->
-
 

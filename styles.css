@@ -59,6 +59,7 @@ div.title {
     width: 100%;
 }
 
+/* find button */
 div.container-title div.find-box {
     display: flex;
     justify-content: flex-end;
@@ -69,6 +70,7 @@ div.container-title div.find-box div.find {
     align-items: center;
     margin-right: 2em;
     border: 1px dotted transparent;
+    cursor: pointer;
 }
 
 div.container-title div.find-box div.find:hover {
@@ -190,6 +192,140 @@ div.loading p {
 }
 
 /* ***** LOADING FRAME END ***** */
+/* ***** FINDING FRAME  ***** */
+
+div.container-find {
+    display: flex;
+    background-color: rgba(173, 255, 47, 0.5);
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+div.finding-box {
+	/* background-color: var(--first-color); */
+    /* border-radius: 5px; */
+    /* background-color: red; */
+}
+
+div.find-title {
+    border-top-left-radius : 5px;
+    border-top-right-radius: 5px;
+    background-color: var(--second-color);
+    color: var(--first-color);
+}
+
+div.find-title h3 {
+    font-size: 1.5em;
+    text-align: center;
+    padding: 0.5em 0.8em;
+}
+
+div.find-content {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--background);
+    /* TODO: revisar los border redondeados */
+    border-radius: 5px;
+}
+
+div.find-content div.find-text {
+    padding: 0.5em;
+    margin: auto;
+}
+
+div.find-content div.find-text input {
+    text-align: center;
+    outline: none;
+    padding: 0.3em;
+}
+
+div.find-content div.find-text input:focus {
+    border: 2px solid var(--first-color);
+    border-radius: 4px; 
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+/* input ISELL Ref error */
+div.find-content div.find-text input.error {
+    border-radius: 4px; 
+    border: 2px solid red;
+}
+
+
+div.find-content div.find-buttons {
+    display: flex;
+    flex-direction: row;
+    padding: 0.5em;
+}
+
+div.find-content div.find-selection {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    padding: 0.5em 0;
+    /* background-color: peru; */
+}
+
+div.find-content div.find-selection input[type="radio"] {
+        -webkit-appearance: none;
+        appearance: none;
+}
+
+div.find-content div.find-selection label {
+    /* background-color: aqua; */
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: center;
+    /* border: 1px solid black; */
+    text-align: center;
+    width: 40%;
+}
+
+div.find-content div.find-selection label p {
+    /* background-color: plum; */
+    padding: 0 0 0 0.3em;
+    line-height: 1.5em;
+    display: inline-block;
+}
+
+
+div.find-content div.find-selection label span {
+    border: 3px solid var(--first-color);
+    width: 1.5em;
+    height: 1.5em;
+    display: inline-block;
+    border-radius: 50%;
+    background-color: var(--background);
+}
+
+div.find-content div.find-selection label input:checked + span {
+    border: 3px solid var(--first-color);
+    background-color: var(--first-color);
+    padding: 0.5em;
+}
+
+div.find-content div.find-error {
+    color: red;
+    text-align: center;
+    padding: 0.3em 0.5em;
+}
+
+/* ***** FINDING FRAME -> FOUND ITEMS ***** */
+
+div.found-items {
+    background-color: aquamarine;
+    padding: 0.5em;
+    width: auto;
+}
+
+
+
+
+
+
+/* ***** FINDING FRAME END ***** */
 
 /* ***** SVG TABLE ICON STYLES ***** */
 
