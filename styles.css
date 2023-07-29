@@ -34,12 +34,21 @@
     text-align: left;
 }
 
+.bold {
+    font-weight: bold;
+}
+
 .block {
     display: block;
 }
 
 .margen-bajo-05 {
     margin-bottom: 0.5em;
+}
+
+.back-1 {
+    background-color: var(--first-color);
+    color: var(--second-color);
 }
 
 /* ***** END BASIC STYLES ***** */
@@ -265,7 +274,6 @@ div.find-content div.find-selection {
     flex-direction: row;
     justify-content: center;
     padding: 0.5em 0;
-    /* background-color: peru; */
 }
 
 div.find-content div.find-selection input[type="radio"] {
@@ -274,17 +282,14 @@ div.find-content div.find-selection input[type="radio"] {
 }
 
 div.find-content div.find-selection label {
-    /* background-color: aqua; */
     display: flex;
     flex-direction: row-reverse;
     justify-content: center;
-    /* border: 1px solid black; */
     text-align: center;
     width: 40%;
 }
 
 div.find-content div.find-selection label p {
-    /* background-color: plum; */
     padding: 0 0 0 0.3em;
     line-height: 1.5em;
     display: inline-block;
@@ -312,18 +317,115 @@ div.find-content div.find-error {
     padding: 0.3em 0.5em;
 }
 
-/* ***** FINDING FRAME -> FOUND ITEMS ***** */
+/* ***** FINDING FRAME -> FOUND ITEMS BY ISELL ***** */
 
 div.found-items {
-    background-color: aquamarine;
+    background-color: var(--background);
     padding: 0.5em;
     width: auto;
+    max-height: 20em;
+    overflow-y: auto;
+    border-top: 2px solid var(--first-color);
 }
 
+div.found-items table {
+    border: 2px solid transparent;
+}
+
+div.found-items tbody#found-items-content tr {
+    border-bottom: 1px solid transparent;
+    cursor: pointer;
+}
+
+div.found-items tbody#found-items-content tr:hover {
+    background-color: var(--second-color);
+    border-bottom: 1px solid gray;
+}
+
+div.found-items tbody#found-items-content tr td {
+    padding: 0.2em;
+}
+
+div.found-items tbody#found-items-content tr td svg {
+    fill: var(--first-color);
+    display: block;
+    height: 1em;
+    width: 1em;
+    transform: rotate(180deg);
+    margin: auto;
+}
+
+div.found-items tbody#found-items-content tr td.found-item-icon:hover {
+    padding: 0;
+    cursor: pointer;
+}
+
+div.found-items tbody#found-items-content tr td.found-item-icon:hover svg {
+    height: 1.5em;
+    width: 1.4em;
+}
+
+/* ***** FINDING FRAME -> FOUND ITEMS BY REFERENCES ***** */
+
+/* div.found-reference-details {
+    top: 50%;
+    left: 50%;
+    height: 75%;
+    width: 60%;
+    z-index: 15;
+    position: fixed;
+    padding: 0.5em;
+    transform:translate(-50%, -50%);
+    background-color: var(--background);
+} */
 
 
+/* ***** FINDING FRAME -> FOUND ITEM ISELL -> DETAILS ***** */
 
+div.found-item-details {
+    top: 50%;
+    left: 50%;
+    height: 75%;
+    width: 60%;
+    z-index: 15;
+    position: fixed;
+    padding: 0.5em;
+    transform:translate(-50%, -50%);
+    background-color: var(--background);
+}
 
+/* div.container-find div.found-item-details  */
+div.close-icon {
+    top: 1em;
+    right: 2em;
+    position: absolute;
+    z-index: 20;
+}
+
+/* div.container-find div.found-item-details  */
+div.close-icon svg {
+    fill: var(--warning-color);
+    height: 1.5em;
+    display: block;
+}
+
+/* div.container-find div.found-item-details  */
+div.close-icon:hover svg {
+    fill: var(--second-color);
+}
+
+div.container-find div.found-item-details div.found-item-details-panel-table {
+    height: 100%;
+    overflow-y: scroll;
+}
+
+div.container-find div.found-item-details table {
+    height: 100%;
+}
+
+div.found-item-details div.found-item-details-panel-table tbody#found-item-details-data tr td.header {
+    padding: 0.2em;
+}
 
 /* ***** FINDING FRAME END ***** */
 
@@ -350,7 +452,7 @@ table tbody#table-body tr.main-type div.expand-base div.expand-cover {
     position: absolute;
     width: 100%;
     height: 100%;
-    z-index: 10;
+    z-index: 5;
 }
 
 

@@ -103,12 +103,19 @@ const title = document.getElementById("title");
 const findBox = document.getElementById("find-box");
 // find button main page 
 const findButton = document.getElementById("find-button");
+const foundItemsPanel = document.getElementById("found-items");
 
 // finding panel
 const findingFrame = document.getElementById("finding-frame");
 const findingText = document.getElementById("finding-text");
 const findCancelB = document.getElementById("find-cancel-b");
 const findIsellRefButton = document.getElementById("find-submit-b");
+const foundItemsTable = document.getElementById("found-items-content");
+
+const foundItemDetailsData = document.getElementById("found-item-details-data");
+
+const foundItemDetailsClose = document.getElementById("found-item-details-close");
+
 const footerVersion = document.getElementById("version-footer");
 
 
@@ -172,6 +179,8 @@ const footerVersion = document.getElementById("version-footer");
     // show find dialog-box
     findButton.addEventListener('click', function() {
         findingFrame.classList.remove("no-visible");
+        findingText.value = "";
+        foundItemsTable.innerHTML = "";
     });
 
     findCancelB.addEventListener('click', () => {
@@ -179,9 +188,17 @@ const footerVersion = document.getElementById("version-footer");
         findingText.classList.remove("error");
         document.getElementById("find-error").classList.add("no-visible");
         findingFrame.classList.add("no-visible");
+        foundItemsTable.innerHTML = "";
+        foundItemsPanel.classList.add("no-visible");
     });
 
     findIsellRefButton.addEventListener('click', findIsellRef );
+
+    foundItemDetailsClose.addEventListener('click', () => {
+        foundItemDetailsClose.parentElement.classList.add("no-visible");
+    });
+
+
 
 
     // *********************************************************
@@ -194,7 +211,7 @@ const footerVersion = document.getElementById("version-footer");
     // Function to initialize the original values
     function initializePage() {
         console.log("Inicializando valores originales...");
-        loadFileLabel.innerText = 'Reporte "By Order Status"';
+        loadFileLabel.innerText = 'Cargar Reporte...';
         loadingFrame.classList.add("no-visible");
         document.title = title.innerText = "Pedidos por flujos";
         findBox.style.display = "none";
@@ -288,7 +305,14 @@ const footerVersion = document.getElementById("version-footer");
                         isellsArray : []
                     } );
             }
-            refMap.get(value[ARTICLE_NUMBER]).isellsArray.push(value[ISELL]);
+            let order = {
+                [ISELL] : value[ISELL], 
+                [ORDER_TYPE] : value[ORDER_TYPE],
+                [CUT_OFF_TIME] : value[CUT_OFF_TIME]
+            };
+
+            refMap.get(value[ARTICLE_NUMBER]).isellsArray.push(order);
+            // console.log("Objeto Referencia: ", value[ARTICLE_NUMBER], refMap.get(value[ARTICLE_NUMBER]));
         });
         return refMap;
     }
@@ -439,7 +463,7 @@ const footerVersion = document.getElementById("version-footer");
             }
             // console.log("valores referencias: ", typeof(key), key, value);
         });
-        console.log("referencias encontrADAS: ", referencesFound);
+        // console.log("referencias encontrADAS: ", referencesFound);
         return referencesFound;
     }
 
@@ -450,36 +474,349 @@ const footerVersion = document.getElementById("version-footer");
             document.getElementById("find-error").innerText = "";
             document.getElementById("find-error").classList.add("no-visible");
             findingText.classList.remove("error");
-
-            
             
             const value = validateIsellRef(findingText.value);
             const typeSearch = document.querySelector("input[name='find-type']:checked").value;
             let foundItems = undefined;
+            let htmlFoundItems = "";
 
             switch (typeSearch) {
                 case FIND_BY_ISELL:
                     foundItems = findByIsell(value, isellsMap);
+                    htmlFoundItems = drawFindByIsellItems(foundItems);
                     break;
                 case FIND_BY_REFERENCE:
                     foundItems = findByReference( value, referencesMap );
+                    htmlFoundItems = drawFindByReferenceItems(foundItems);
                     break;
                 default:
                     return;
             }
-            // console.log("Buscar: ", value, typeSearch, isellsMap);
 
-            console.log("Busqueda por '", typeSearch, "', encontrados: ", foundItems);
-            
-
+            previsualizeFoundItems(htmlFoundItems);
 
         } catch (error) {
             document.getElementById("find-error").innerText = error.message;
             document.getElementById("find-error").classList.remove("no-visible");
             findingText.classList.add("error");
             console.log("ERROR:", error);
-            // alert(error.message);
         }
+    }
+
+
+    // *********************************************************
+    function previsualizeFoundItems( foundItemsHtmlElements ){
+        
+        foundItemsPanel.classList.remove("no-visible");
+        foundItemsTable.innerHTML = "";
+
+        if( foundItemsHtmlElements === "" ) {
+            foundItemsTable.innerHTML = "<tr><td>No se encontraron coincidencias.</td></tr>";
+        } else {
+            foundItemsTable.innerHTML = foundItemsHtmlElements;            
+        }
+    }
+
+
+    // *********************************************************
+    function drawFindByIsellItems(itemsMap) {
+
+        let htmlTable = "";
+        htmlTable += "<tr>";
+
+        htmlTable += "<th>";
+        htmlTable += "ISELL";
+        htmlTable += "</th>";
+
+        htmlTable += "<th>";
+        htmlTable += "Tipo de Flujo";
+        htmlTable += "</th>";
+
+        htmlTable += "<th>";
+        htmlTable += "COT";
+        htmlTable += "</th>";
+
+        htmlTable += "<th>";
+        htmlTable += " ";
+        htmlTable += "</th>";
+
+        htmlTable += "</tr>";
+
+        itemsMap.forEach( (value, key ) => {
+            htmlTable += drawItemByIsell( value );
+        });
+
+        return htmlTable;
+    }
+
+
+    // *********************************************************
+    function drawItemByIsell(item){
+        let htmlContent = "";
+
+        console.log("Item: ", item);
+
+        htmlContent += "<tr>";
+
+        htmlContent += "<td>";
+        htmlContent += item[ISELL];
+        htmlContent += "</td>";
+
+        htmlContent += "<td>";
+        htmlContent += item[ORDER_TYPE];
+        htmlContent += "</td>";
+
+        htmlContent += "<td>";
+        htmlContent += item[CUT_OFF_TIME];
+        htmlContent += "</td>";
+
+        htmlContent += "<td id='";
+        htmlContent += item[ISELL];
+        htmlContent += "' class='found-item-icon'";
+        htmlContent += " onclick='javascript:foundItemByIsellShowDetails(\"";
+        htmlContent += item[ISELL];
+        htmlContent += "\")' >";
+            // SVG icon
+            htmlContent += '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">';
+            htmlContent += '<path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/>';
+            htmlContent += '</svg>';
+        htmlContent += "</td>";
+
+        htmlContent += "</tr>";
+        return htmlContent;
+    }
+
+
+    // *********************************************************
+    function drawOrderProductsDetails(orderProductsArray ) {
+        console.log("Order Details section: ",  orderProductsArray );
+
+        let htmlProducts = "";
+
+        orderProductsArray.forEach( product => {
+            console.log("Producto: ", product);
+            htmlProducts += "<tr>";
+
+            htmlProducts += "<td class='centrar'>";
+            htmlProducts += product[ARTICLE_NUMBER];
+            htmlProducts += "</td>";
+
+            htmlProducts += "<td>";
+            htmlProducts += product[ARTICLE_NAME];
+            htmlProducts += "</td>";
+            
+            htmlProducts += "<td class='centrar'>";
+            htmlProducts += product[ORDERED_QTY];
+            htmlProducts += "</td>";
+            
+            htmlProducts += "</tr>";
+        });
+
+        return htmlProducts;
+    }
+    // *********************************************************
+    // function to show ISELL order details
+    function foundItemByIsellShowDetails(isell) {
+
+        // foundItemDetailsData.parentElement.parentElement.parentElement.classList.remove("no-visible");
+        document.getElementById("found-item-details").classList.remove("no-visible");
+        
+        const item = isellsMap.get(isell);
+        console.log("Detalles: ", item);
+
+        let htmlDetails = "";
+
+        htmlDetails += "<tr>";
+        htmlDetails += "<td class='header'>ISELL: </td>";
+        htmlDetails += "<td class='bold header' >";
+        htmlDetails += item[ISELL];
+        htmlDetails += "</td>";
+        htmlDetails += "</tr>";
+
+        htmlDetails += "<tr>";
+        htmlDetails += "<td class='header'>CUT OFF DATE: </td>";
+        htmlDetails += "<td class='header'>";
+        htmlDetails += "04-07-2023";
+        htmlDetails += "</td>";
+        htmlDetails += "</tr>";
+
+        htmlDetails += "<tr>";
+        htmlDetails += "<td class='header'>CUT OFF TIME: </td>";
+        htmlDetails += "<td class='header'>";
+        htmlDetails += item[CUT_OFF_TIME];
+        htmlDetails += "</td>";
+        htmlDetails += "</tr>";
+
+        htmlDetails += "<tr>";
+        htmlDetails += "<td class='header'>Tipo de Flujo: </td>";
+        htmlDetails += "<td class='header'>";
+        htmlDetails += item[ORDER_TYPE];
+        htmlDetails += "</td>";
+        htmlDetails += "</tr>";
+
+        htmlDetails += "<tr><td colspan='3' class='centrar back-1 bold' >";
+        htmlDetails += "Market";
+        htmlDetails += "</td></tr>";
+
+        htmlDetails += drawOrderProductsDetails(item.pickAreasOrder.get(MARKET_HALL));
+
+        htmlDetails += "<tr><td colspan='3' class='centrar back-1 bold' >";
+        htmlDetails += "Auto Servicio";
+        htmlDetails += "</td></tr>";
+
+        htmlDetails += drawOrderProductsDetails(item.pickAreasOrder.get(SELF_SERVICE));
+
+        htmlDetails += "<tr><td colspan='3' class='centrar back-1 bold' >";
+        htmlDetails += "Full - Almacén";
+        htmlDetails += "</td></tr>";
+
+        htmlDetails += drawOrderProductsDetails(item.pickAreasOrder.get(WAREHOUSE));
+        
+        htmlDetails += "<tr class='centrar back-1 bold'>";
+        htmlDetails += "<td>Paquetes</td>";
+        htmlDetails += "<td>Peso</td>";
+        htmlDetails += "<td>Volumen</td>";
+        htmlDetails += "</tr>";
+
+        htmlDetails += "<tr>";
+        htmlDetails += "<td class='centrar' >";
+        htmlDetails += item.totalOrderPackages;
+        htmlDetails += "</td>";
+        
+        htmlDetails += "<td class='centrar' >";
+        htmlDetails += item.totalOrderWeight;
+        htmlDetails += "</td>";
+        
+        htmlDetails += "<td class='centrar' >";
+        htmlDetails += item.totalOrderVolume;
+        htmlDetails += "</td>";
+        htmlDetails += "</tr>";
+
+        foundItemDetailsData.innerHTML = htmlDetails;
+    }
+
+
+    // *********************************************************
+    function drawFindByReferenceItems(itemsMap){
+
+        let htmlTable = "";
+        htmlTable += "<tr>";
+
+        htmlTable += "<th>";
+        htmlTable += "Referencia";
+        htmlTable += "</th>";
+
+        htmlTable += "<th>";
+        htmlTable += "Producto";
+        htmlTable += "</th>";
+
+        htmlTable += "<th>";
+        htmlTable += "Pedidos";
+        htmlTable += "</th>";
+
+        htmlTable += "</tr>";
+
+        itemsMap.forEach( (value, key ) => {
+            htmlTable += drawItemByReference( value );
+        });
+
+        return htmlTable;
+    }
+
+
+    // *********************************************************
+    function drawItemByReference( item ){
+        let htmlContent = "";
+
+        console.log("Item: ", item);
+
+        htmlContent += "<tr>";
+
+        htmlContent += "<td>";
+        htmlContent += item[ARTICLE_NUMBER];
+        htmlContent += "</td>";
+
+        htmlContent += "<td>";
+        htmlContent += item[ARTICLE_NAME];
+        htmlContent += "</td>";
+
+        htmlContent += "<td class='centrar found-item-icon'";
+        // htmlContent += " onclick='javascript:foundItemByIsellShowDetails(\"";
+        htmlContent += " onclick='javascript:foundItemByReferenceShowIsells(\"";
+        htmlContent += item[ARTICLE_NUMBER];
+        htmlContent += "\")' >";
+            // SVG icon
+            htmlContent += '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">';
+            htmlContent += '<path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/>';
+            htmlContent += '</svg>';
+        htmlContent += "</td>";
+
+        htmlContent += "</tr>";
+        return htmlContent;
+    }
+
+
+    // *********************************************************
+    function foundItemByReferenceShowIsells(reference) {
+
+        // foundItemDetailsData.parentElement.parentElement.parentElement.classList.remove("no-visible");
+        document.getElementById("found-item-details").classList.remove("no-visible");
+        
+        const item = referencesMap.get(reference);
+        console.log("Detalles: ", item);
+
+        let htmlDetails = "";
+
+        htmlDetails += "<tr>";
+        htmlDetails += "<td class='header'>Referencia: </td>";
+        htmlDetails += "<td class='bold header' >";
+        htmlDetails += item[ARTICLE_NUMBER];
+        htmlDetails += "</td>";
+        htmlDetails += "</tr>";
+
+        htmlDetails += "<tr>";
+        htmlDetails += "<td class='header'>Articulo: </td>";
+        htmlDetails += "<td class='header'>";
+        htmlDetails += item[ARTICLE_NAME];
+        htmlDetails += "</td>";
+        htmlDetails += "</tr>";
+
+        htmlDetails += "<tr><td colspan='3' class='centrar back-1 bold' >";
+        htmlDetails += "Listado de Pedidos";
+        htmlDetails += "</td></tr>";
+
+        htmlDetails += drawReferenceBelongsToOrders(item.isellsArray);
+
+        foundItemDetailsData.innerHTML = htmlDetails;
+    }
+
+
+    // *********************************************************
+    function drawReferenceBelongsToOrders(itemsArray){
+
+        console.log("ISELL from Reference: ", itemsArray);
+
+        let htmlRow = "";
+
+        itemsArray.forEach( isell => {
+            htmlRow += "<tr>";
+
+            htmlRow += "<td>";
+            htmlRow += isell[ISELL];
+            htmlRow += "</td>";
+
+            htmlRow += "<td>";
+            htmlRow += isell[ORDER_TYPE];
+            htmlRow += "</td>";
+
+            htmlRow += "<td>";
+            htmlRow += isell[CUT_OFF_TIME];
+            htmlRow += "</td>";
+
+            htmlRow += "</tr>";
+        });
+
+        return htmlRow;
     }
 
 

@@ -18,15 +18,41 @@
     </div>
 
     <!-- Panel Find -->
-    <div id="finding-frame" class="loading-frame no-visible" id="finding-frame">
+    <div id="finding-frame" class="loading-frame no-visible">
         <div class="container-find">
+
+            <div id="found-item-details" class="no-visible found-item-details">
+                <div id="found-item-details-close" class="close-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512">
+                        <path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c-9.4 9.4-9.4 24.6 0 33.9l47 47-47 47c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l47-47 47 47c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-47-47 47-47c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-47 47-47-47c-9.4-9.4-24.6-9.4-33.9 0z"/>
+                    </svg>
+                </div>
+
+                <!-- panel to show Order (ISELL) details -->
+                <div class="found-item-details-panel-table">
+                    <table>
+                        <tbody id="found-item-details-data"></tbody>
+                    </table>
+                </div>
+
+                <!-- section for show reference's orders details-->
+                <div class="found-item-reference-panel-table">
+                    <table>
+                        <tbody id="found-item-reference-details-data"></tbody>
+                    </table>
+                </div>
+
+
+            </div>
+                
             <div class="finding-box" >
                 <div class="find-title">
                     <h3>Buscar por ISELL o por Referencia</h3>
                 </div>
+
                 <div class="find-content">
                     <div class="find-text">
-                        <input id="finding-text" class="" type="text" name="finding-text">
+                        <input id="finding-text" class="" type="text" name="finding-text" value="">
                     </div>
 
                     <div class="find-selection">
@@ -52,9 +78,10 @@
 
                 </div>
                 
-                
-                <div id="found-items" class="found-items">
-                    items enconntrasddos!!
+                <div id="found-items" class="no-visible found-items">
+                    <table>
+                        <tbody id="found-items-content"></tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -82,7 +109,7 @@
         <div class="contenido">
 
             <div class="margen-bajo-05">
-                <label id="load-file-label" class="block custom-button" for="load-file">Reporte "By Order Status"</label>
+                <label id="load-file-label" class="block custom-button" for="load-file">Cargar Reporte...</label>
                 <input id="load-file" type="file" class="no-visible">
             </div>
             
