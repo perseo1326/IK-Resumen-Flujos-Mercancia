@@ -395,6 +395,7 @@ const footerVersion = document.getElementById("version-footer");
         
         console.log("Printing Document...");
         const htmlListOfRows = document.getElementsByClassName("details");
+        // WARNING: for minification check the names of the variables into the loop
         for (const htmlRow of htmlListOfRows) {
             htmlRow.classList.remove("hide-details");
         }
