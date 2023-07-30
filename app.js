@@ -122,7 +122,7 @@ const footerVersion = document.getElementById("version-footer");
 
     // *********************************************************
 
-    const VERSION = "1.0";
+    const VERSION = "1.1";
     const EXCEL_MIME_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
     // required columns from 'By Status' file
@@ -152,18 +152,6 @@ const footerVersion = document.getElementById("version-footer");
     let referencesMap = new Map();
     let isellsMap = new Map();
     let ordersTypes = new Map();
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     // *********************************************************
@@ -199,8 +187,6 @@ const footerVersion = document.getElementById("version-footer");
     });
 
 
-
-
     // *********************************************************
     // *********************************************************
     // code to be executed loading page.
@@ -223,7 +209,8 @@ const footerVersion = document.getElementById("version-footer");
         isellsMap = new Map();
         ordersTypes = new Map();
         referencesMap = new Map();
-        workDate.valueAsDate = new Date("2023-07-04");
+        // TODO: date for debbuging purposes
+        workDate.valueAsDate = new Date();
     }
 
     // *********************************************************
@@ -231,7 +218,7 @@ const footerVersion = document.getElementById("version-footer");
     function validateDate(inputDate) {
         const date = inputDate.valueAsDate;
         if(!date ){
-            console.log("COMMONS:validateDate: La fecha seleccionada es inválida.");
+            console.log("WARNING:validateDate: La fecha seleccionada es inválida.");
             throw new Error("La fecha seleccionada es inválida.");
         } 
         return inputDate.value;
@@ -282,7 +269,6 @@ const footerVersion = document.getElementById("version-footer");
                 console.log("Carga \"" + excelFile.file.name + "\" Finalizada!", arrayExcel); 
 
                 contentData = arrayExcel;
-                referencesMap = createReferencesMap(contentData);
 
             } catch (error) {
                 console.log("ERROR:", error);
@@ -334,7 +320,13 @@ const footerVersion = document.getElementById("version-footer");
 
             contentData = filterOrdersByDate(contentData, dateCutOffDate);
 
+            // Create a data map with references for search method
+            referencesMap = createReferencesMap(contentData);
+
+            // Joun articles with same order/Isell
             isellsMap = mappingArrayDataExcel( contentData );
+
+            // TODO: calcular los totales de peso, paquetes y volumen para cada orden
 
             isellsMap.forEach( (order, isell)  => {
 
@@ -344,9 +336,7 @@ const footerVersion = document.getElementById("version-footer");
                 }
                 
                 let orderType = ordersTypes.get((order[ORDER_TYPE] + ',' + order[CUT_OFF_TIME]));
-
                 orderType.addOrder(order);
-
                 ordersTypes.set((order[ORDER_TYPE] + ',' + order[CUT_OFF_TIME]), orderType);
             });
 
@@ -385,7 +375,6 @@ const footerVersion = document.getElementById("version-footer");
             dataPanel.classList.remove("no-visible");
             findBox.style.display = "flex";
 
-            // showContent(keysOrderTypes, ordersTypes);
             showContent(totalsOrderTypes, ordersTypes);
 
             // Set document title for printing purpose
@@ -428,8 +417,8 @@ const footerVersion = document.getElementById("version-footer");
 
         const pattern = /[^0-9]/;
         if(text === ''){
-            console.log("WARNING:validateIsellRef: No hay nada que buscar.");
-            throw new Error("No hay nada que buscar.");
+            console.log("WARNING:validateIsellRef: No hay datos que buscar.");
+            throw new Error("No hay datos que buscar.");
         }
         if(pattern.test(text)){
             console.log("WARNING:validateIsellRef: Unicamente se permiten números.");
@@ -446,6 +435,7 @@ const footerVersion = document.getElementById("version-footer");
         dataMap.forEach( (value, key ) => {
             if(key.includes(isellText)){
                 isellsFound.set(key, value);
+                // console.log("ISELL encontrado: ", key, value);
             }
         });
         return isellsFound;
@@ -469,8 +459,24 @@ const footerVersion = document.getElementById("version-footer");
 
 
     // *********************************************************
+    // function to validate search results
+    function searchErrorResults( searchResultMap ){
+
+        if(searchResultMap.size <= 0 ){
+            console.log("INFO:searchErrorResults: No hay resultados para la búsqueda.");
+            throw new Error ("No hay resultados para la búsqueda.");
+        }
+
+        if(searchResultMap.size > 15 ){
+            console.log("INFO:searchErrorResults: Búsqueda con demasiados resultados = " + searchResultMap.size );
+            throw new Error("Búsqueda con demasiados resultados: " + searchResultMap.size );
+        }
+    }
+
+    // *********************************************************
     function findIsellRef() {
         try {
+            // Remove any error message/alert
             document.getElementById("find-error").innerText = "";
             document.getElementById("find-error").classList.add("no-visible");
             findingText.classList.remove("error");
@@ -483,10 +489,12 @@ const footerVersion = document.getElementById("version-footer");
             switch (typeSearch) {
                 case FIND_BY_ISELL:
                     foundItems = findByIsell(value, isellsMap);
+                    searchErrorResults(foundItems);
                     htmlFoundItems = drawFindByIsellItems(foundItems);
                     break;
                 case FIND_BY_REFERENCE:
                     foundItems = findByReference( value, referencesMap );
+                    searchErrorResults(foundItems);
                     htmlFoundItems = drawFindByReferenceItems(foundItems);
                     break;
                 default:
@@ -554,7 +562,7 @@ const footerVersion = document.getElementById("version-footer");
     function drawItemByIsell(item){
         let htmlContent = "";
 
-        console.log("Item: ", item);
+        // console.log("Item: ", item);
 
         htmlContent += "<tr>";
 
@@ -588,13 +596,13 @@ const footerVersion = document.getElementById("version-footer");
 
 
     // *********************************************************
-    function drawOrderProductsDetails(orderProductsArray ) {
-        console.log("Order Details section: ",  orderProductsArray );
+    function drawOrderProductsDetails( orderProductsArray ) {
+        // console.log("Order Details section: ",  orderProductsArray );
 
         let htmlProducts = "";
 
         orderProductsArray.forEach( product => {
-            console.log("Producto: ", product);
+            // console.log("Producto: ", product);
             htmlProducts += "<tr>";
 
             htmlProducts += "<td class='centrar'>";
@@ -618,39 +626,39 @@ const footerVersion = document.getElementById("version-footer");
     // function to show ISELL order details
     function foundItemByIsellShowDetails(isell) {
 
-        // foundItemDetailsData.parentElement.parentElement.parentElement.classList.remove("no-visible");
         document.getElementById("found-item-details").classList.remove("no-visible");
-        
-        const item = isellsMap.get(isell);
-        console.log("Detalles: ", item);
+        const order = isellsMap.get(isell);
+        // console.log("Detalles By ISELL: ", x, typeof(isell), isell, order, isellsMap.has(isell));
 
         let htmlDetails = "";
 
         htmlDetails += "<tr>";
         htmlDetails += "<td class='header'>ISELL: </td>";
         htmlDetails += "<td class='bold header' >";
-        htmlDetails += item[ISELL];
+        htmlDetails += order[ISELL];
         htmlDetails += "</td>";
         htmlDetails += "</tr>";
 
         htmlDetails += "<tr>";
         htmlDetails += "<td class='header'>CUT OFF DATE: </td>";
         htmlDetails += "<td class='header'>";
-        htmlDetails += "04-07-2023";
+        // date selected 
+        htmlDetails += workDate.value;
+        
         htmlDetails += "</td>";
         htmlDetails += "</tr>";
 
         htmlDetails += "<tr>";
         htmlDetails += "<td class='header'>CUT OFF TIME: </td>";
         htmlDetails += "<td class='header'>";
-        htmlDetails += item[CUT_OFF_TIME];
+        htmlDetails += order[CUT_OFF_TIME];
         htmlDetails += "</td>";
         htmlDetails += "</tr>";
 
         htmlDetails += "<tr>";
         htmlDetails += "<td class='header'>Tipo de Flujo: </td>";
         htmlDetails += "<td class='header'>";
-        htmlDetails += item[ORDER_TYPE];
+        htmlDetails += order[ORDER_TYPE];
         htmlDetails += "</td>";
         htmlDetails += "</tr>";
 
@@ -658,19 +666,19 @@ const footerVersion = document.getElementById("version-footer");
         htmlDetails += "Market";
         htmlDetails += "</td></tr>";
 
-        htmlDetails += drawOrderProductsDetails(item.pickAreasOrder.get(MARKET_HALL));
+        htmlDetails += drawOrderProductsDetails(order.pickAreasOrder.get(MARKET_HALL));
 
         htmlDetails += "<tr><td colspan='3' class='centrar back-1 bold' >";
         htmlDetails += "Auto Servicio";
         htmlDetails += "</td></tr>";
 
-        htmlDetails += drawOrderProductsDetails(item.pickAreasOrder.get(SELF_SERVICE));
+        htmlDetails += drawOrderProductsDetails(order.pickAreasOrder.get(SELF_SERVICE));
 
         htmlDetails += "<tr><td colspan='3' class='centrar back-1 bold' >";
         htmlDetails += "Full - Almacén";
         htmlDetails += "</td></tr>";
 
-        htmlDetails += drawOrderProductsDetails(item.pickAreasOrder.get(WAREHOUSE));
+        htmlDetails += drawOrderProductsDetails(order.pickAreasOrder.get(WAREHOUSE));
         
         htmlDetails += "<tr class='centrar back-1 bold'>";
         htmlDetails += "<td>Paquetes</td>";
@@ -680,15 +688,15 @@ const footerVersion = document.getElementById("version-footer");
 
         htmlDetails += "<tr>";
         htmlDetails += "<td class='centrar' >";
-        htmlDetails += item.totalOrderPackages;
+        htmlDetails += order.totalOrderPackages;
         htmlDetails += "</td>";
         
         htmlDetails += "<td class='centrar' >";
-        htmlDetails += item.totalOrderWeight;
+        htmlDetails += order.totalOrderWeight;
         htmlDetails += "</td>";
         
         htmlDetails += "<td class='centrar' >";
-        htmlDetails += item.totalOrderVolume;
+        htmlDetails += order.totalOrderVolume;
         htmlDetails += "</td>";
         htmlDetails += "</tr>";
 
@@ -728,7 +736,7 @@ const footerVersion = document.getElementById("version-footer");
     function drawItemByReference( item ){
         let htmlContent = "";
 
-        console.log("Item: ", item);
+        // console.log("Item: ", item);
 
         htmlContent += "<tr>";
 
@@ -741,7 +749,6 @@ const footerVersion = document.getElementById("version-footer");
         htmlContent += "</td>";
 
         htmlContent += "<td class='centrar found-item-icon'";
-        // htmlContent += " onclick='javascript:foundItemByIsellShowDetails(\"";
         htmlContent += " onclick='javascript:foundItemByReferenceShowIsells(\"";
         htmlContent += item[ARTICLE_NUMBER];
         htmlContent += "\")' >";
@@ -759,11 +766,10 @@ const footerVersion = document.getElementById("version-footer");
     // *********************************************************
     function foundItemByReferenceShowIsells(reference) {
 
-        // foundItemDetailsData.parentElement.parentElement.parentElement.classList.remove("no-visible");
         document.getElementById("found-item-details").classList.remove("no-visible");
         
         const item = referencesMap.get(reference);
-        console.log("Detalles: ", item);
+        // console.log("Detalles: ", item);
 
         let htmlDetails = "";
 
@@ -794,14 +800,17 @@ const footerVersion = document.getElementById("version-footer");
     // *********************************************************
     function drawReferenceBelongsToOrders(itemsArray){
 
-        console.log("ISELL from Reference: ", itemsArray);
-
         let htmlRow = "";
-
+        
         itemsArray.forEach( isell => {
-            htmlRow += "<tr>";
+            // console.log("ISELL from Reference: ", isell);
+            htmlRow += "<tr class='orders'>";
 
-            htmlRow += "<td>";
+            htmlRow += "<td class='link centrar bold' onclick='javascript:foundItemByIsellShowDetails(\"";
+            // htmlRow += "<td class='link centrar bold' onclick='javascript:foundItemByIsellShowDetails(\"";
+            htmlRow += isell[ISELL];
+            // htmlRow += "1366680138";
+            htmlRow += "\")' >";
             htmlRow += isell[ISELL];
             htmlRow += "</td>";
 
@@ -839,7 +848,7 @@ const footerVersion = document.getElementById("version-footer");
     function showContent(dataMapMain, detailMap) {
 
         // console.log("ShowContent: ", dataMap);
-        // Inicializar valores para la tabla, en los datos y en la vista
+        //Init values for table and data in view 
         tableBody.innerHTML = "";
         let dataTableBody = "";
 

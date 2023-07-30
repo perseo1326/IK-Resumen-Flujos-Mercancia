@@ -83,6 +83,5 @@ class ExcelFileOpen {
 
             orderDetailsMap.set(rowData[ISELL], order);
         });
-        
         return orderDetailsMap;
     }

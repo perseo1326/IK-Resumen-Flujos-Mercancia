@@ -212,12 +212,6 @@ div.container-find {
     justify-content: center;
 }
 
-div.finding-box {
-	/* background-color: var(--first-color); */
-    /* border-radius: 5px; */
-    /* background-color: red; */
-}
-
 div.find-title {
     border-top-left-radius : 5px;
     border-top-right-radius: 5px;
@@ -365,22 +359,8 @@ div.found-items tbody#found-items-content tr td.found-item-icon:hover svg {
     width: 1.4em;
 }
 
+/* ***** FINDING FRAME -> FOUND ITEM BY ISELL -> DETAILS ***** */
 /* ***** FINDING FRAME -> FOUND ITEMS BY REFERENCES ***** */
-
-/* div.found-reference-details {
-    top: 50%;
-    left: 50%;
-    height: 75%;
-    width: 60%;
-    z-index: 15;
-    position: fixed;
-    padding: 0.5em;
-    transform:translate(-50%, -50%);
-    background-color: var(--background);
-} */
-
-
-/* ***** FINDING FRAME -> FOUND ITEM ISELL -> DETAILS ***** */
 
 div.found-item-details {
     top: 50%;
@@ -394,7 +374,6 @@ div.found-item-details {
     background-color: var(--background);
 }
 
-/* div.container-find div.found-item-details  */
 div.close-icon {
     top: 1em;
     right: 2em;
@@ -402,14 +381,12 @@ div.close-icon {
     z-index: 20;
 }
 
-/* div.container-find div.found-item-details  */
 div.close-icon svg {
     fill: var(--warning-color);
     height: 1.5em;
     display: block;
 }
 
-/* div.container-find div.found-item-details  */
 div.close-icon:hover svg {
     fill: var(--second-color);
 }
@@ -425,6 +402,22 @@ div.container-find div.found-item-details table {
 
 div.found-item-details div.found-item-details-panel-table tbody#found-item-details-data tr td.header {
     padding: 0.2em;
+}
+
+tbody#found-item-details-data tr.orders:hover  {
+    background-color: var(--second-color);
+}
+
+tbody#found-item-details-data tr td.link {
+    text-decoration: underline var(--first-color) solid ;
+    color: var(--first-color);
+    cursor: pointer;
+    padding: 0 0.2em;
+}
+
+tbody#found-item-details-data tr td.link:hover {
+    color: var(--background);
+    text-decoration-color: var(--background);
 }
 
 /* ***** FINDING FRAME END ***** */
@@ -455,10 +448,7 @@ table tbody#table-body tr.main-type div.expand-base div.expand-cover {
     z-index: 5;
 }
 
-
 /* ***** SVG TABLE ICON STYLES END ***** */
-
-
 
 /* ***** TABLE STYLES ***** */
 
@@ -497,7 +487,6 @@ table tbody#table-body tr.main-type {
     font-weight: bold;
 }
 
-/* TODO */
 table tbody#table-body tr.main-type td.expand {
     cursor: pointer;
 }
