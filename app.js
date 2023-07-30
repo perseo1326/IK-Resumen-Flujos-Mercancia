@@ -249,9 +249,11 @@ const footerVersion = document.getElementById("version-footer");
     function loadReportsExcel (excelFile){
 
         let fileReader = new FileReader();
+        // Constants for minification
         const read = "read";
         const utils = "utils";
         const sheet_to_row_object_array = "sheet_to_row_object_array";
+        const Sheets = "Sheets";
 
         fileReader.onloadend = (event) => { 
             loadingFrame.classList.add("no-visible");
@@ -262,7 +264,7 @@ const footerVersion = document.getElementById("version-footer");
             try {
                 let buffer = this.result;
                 let workbook =  XLSX[read](buffer);
-                let contentFile =  XLSX[utils][sheet_to_row_object_array](workbook.Sheets[WORKING_SHEET]);
+                let contentFile =  XLSX[utils][sheet_to_row_object_array](workbook[Sheets][WORKING_SHEET]);
 
                 // process and clean info from the file
                 let arrayExcel = readReportsExcel(excelFile.file, contentFile);
@@ -286,8 +288,8 @@ const footerVersion = document.getElementById("version-footer");
         dataArray.forEach( value => {
             if(!refMap.has(value[ARTICLE_NUMBER])) {
                 refMap.set(value[ARTICLE_NUMBER], {
-                        ARTICLE_NUMBER : value[ARTICLE_NUMBER], 
-                        ARTICLE_NAME : value[ARTICLE_NAME],
+                        [ARTICLE_NUMBER] : value[ARTICLE_NUMBER], 
+                        [ARTICLE_NAME] : value[ARTICLE_NAME],
                         isellsArray : []
                     } );
             }
@@ -323,7 +325,7 @@ const footerVersion = document.getElementById("version-footer");
             // Create a data map with references for search method
             referencesMap = createReferencesMap(contentData);
 
-            // Joun articles with same order/Isell
+            // Join articles with same order/Isell
             isellsMap = mappingArrayDataExcel( contentData );
 
             // TODO: calcular los totales de peso, paquetes y volumen para cada orden
@@ -390,12 +392,12 @@ const footerVersion = document.getElementById("version-footer");
 
     // *********************************************************
     function printDocument() {
-
+        
+        console.log("Printing Document...");
         const htmlListOfRows = document.getElementsByClassName("details");
         for (const htmlRow of htmlListOfRows) {
             htmlRow.classList.remove("hide-details");
         }
-        console.log("Printing Document...");
 
         window.print();
     }
@@ -736,7 +738,7 @@ const footerVersion = document.getElementById("version-footer");
     function drawItemByReference( item ){
         let htmlContent = "";
 
-        // console.log("Item: ", item);
+        // console.log("Item: ", item, ARTICLE_NAME, ARTICLE_NUMBER);
 
         htmlContent += "<tr>";
 
@@ -768,22 +770,22 @@ const footerVersion = document.getElementById("version-footer");
 
         document.getElementById("found-item-details").classList.remove("no-visible");
         
-        const item = referencesMap.get(reference);
-        // console.log("Detalles: ", item);
+        const ref = referencesMap.get(reference);
+        // console.log("Detalles: ", ref);
 
         let htmlDetails = "";
 
         htmlDetails += "<tr>";
         htmlDetails += "<td class='header'>Referencia: </td>";
         htmlDetails += "<td class='bold header' >";
-        htmlDetails += item[ARTICLE_NUMBER];
+        htmlDetails += ref[ARTICLE_NUMBER];
         htmlDetails += "</td>";
         htmlDetails += "</tr>";
 
         htmlDetails += "<tr>";
         htmlDetails += "<td class='header'>Articulo: </td>";
         htmlDetails += "<td class='header'>";
-        htmlDetails += item[ARTICLE_NAME];
+        htmlDetails += ref[ARTICLE_NAME];
         htmlDetails += "</td>";
         htmlDetails += "</tr>";
 
@@ -791,7 +793,7 @@ const footerVersion = document.getElementById("version-footer");
         htmlDetails += "Listado de Pedidos";
         htmlDetails += "</td></tr>";
 
-        htmlDetails += drawReferenceBelongsToOrders(item.isellsArray);
+        htmlDetails += drawReferenceBelongsToOrders(ref.isellsArray);
 
         foundItemDetailsData.innerHTML = htmlDetails;
     }
@@ -807,9 +809,7 @@ const footerVersion = document.getElementById("version-footer");
             htmlRow += "<tr class='orders'>";
 
             htmlRow += "<td class='link centrar bold' onclick='javascript:foundItemByIsellShowDetails(\"";
-            // htmlRow += "<td class='link centrar bold' onclick='javascript:foundItemByIsellShowDetails(\"";
             htmlRow += isell[ISELL];
-            // htmlRow += "1366680138";
             htmlRow += "\")' >";
             htmlRow += isell[ISELL];
             htmlRow += "</td>";
@@ -832,13 +832,9 @@ const footerVersion = document.getElementById("version-footer");
     // *********************************************************
     function showRowDetails(evento){
 
-        // console.log("Evento: ", evento.target);
         const element = evento.target;
         if(element.classList.contains("expand-cover")){
-            // console.log("elemento: ", element);
-            
             const rowElement = element.parentElement.parentElement.parentElement;
-            console.log("BisAbuelo: ", rowElement);
             reverseRowVisibility(rowElement.nextSibling, rowElement.id);
         }
     }
@@ -1006,12 +1002,4 @@ const footerVersion = document.getElementById("version-footer");
 
         return htmlTotals;
     }
-
-
-
-
-
-
-
-
 
