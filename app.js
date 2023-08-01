@@ -204,6 +204,7 @@ const footerVersion = document.getElementById("version-footer");
         findingText.value = "";
         
         footerVersion.innerText = "Versión " + VERSION + footerVersion.innerText;
+        document.getElementById("find-isell").checked = true;
 
         contentData = [];
         isellsMap = new Map();
@@ -464,6 +465,8 @@ const footerVersion = document.getElementById("version-footer");
     // *********************************************************
     // function to validate search results
     function searchErrorResults( searchResultMap ){
+        foundItemsTable.innerHTML = "";
+        foundItemsPanel.classList.add("no-visible");
 
         if(searchResultMap.size <= 0 ){
             console.log("INFO:searchErrorResults: No hay resultados para la búsqueda.");
